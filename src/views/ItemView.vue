@@ -1,6 +1,8 @@
 <template>
   <div>
-    
+    <pre>
+      {{item}}
+    </pre>
   </div>
 </template>
 
@@ -11,22 +13,15 @@ export default {
 
   computed: {
     item () {
-      return this.$store.state.items[this.$route.params.id]
+      return [this.$store.state.items, this.$store.state.users]
     }
   },
 
   // We only fetch the item itself before entering the view, because
   // it might take a long time to load threads with hundreds of comments
   // due to how the HN Firebase API works.
-  asyncData ({ store, route: { params: { id }}}) {
-    return store.dispatch('FETCH_ITEMS', { ids: [id] })
-  },
-
-  title () {
-    return this.item.title
-  },
-
-  methods: {
+  asyncData ({ store }) {
+    return store.dispatch('FETCH_ITEM_DATA', "dummy")
   }
 }
 </script>

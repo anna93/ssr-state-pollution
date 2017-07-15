@@ -1,6 +1,8 @@
 <template>
   <div>
-    
+    <pre>
+      {{user}}
+    </pre>
   </div>
 </template>
 
@@ -11,12 +13,12 @@ export default {
 
   computed: {
     user () {
-      return this.$store.state.users[this.$route.params.id]
+      return [this.$store.state.items, this.$store.state.users]
     }
   },
 
-  asyncData ({ store, route: { params: { id }}}) {
-    return store.dispatch('FETCH_USER', { id })
+  asyncData ({ store }) {
+    return store.dispatch('FETCH_USER_DATA', "dummy")
   }
 }
 </script>
