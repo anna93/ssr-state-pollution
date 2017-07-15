@@ -1,61 +1,20 @@
-# vue-hackernews-2.0
+# Vue SSR State pullution 
 
-HackerNews clone built with Vue 2.0 + vue-router + vuex, with server-side rendering.
+## This example demonstrates state pollution if application state (vuex) is not properly set up
 
-<p align="center">
-  <a href="https://vue-hn.now.sh" target="_blank">
-    <img src="https://cloud.githubusercontent.com/assets/499550/17546273/5aabc5fc-5eaf-11e6-8d6a-ad00937e8bd6.png" width="700px">
-    <br>
-    Live Demo
-  </a>
-</p>
+## Steps
+1. `npm install`
+2. `npm run dev`
+3. Access localhost:8080/user - you will see Date object against users property
+4. Now, open localhost:8080/item - you will see Date object set for both the propeties, item as well as users
 
-## Features
+## what to expect
+On each reload of /item the object for users should be empty and vice-versa
 
-> Note: in practice, it is unnecessary to code-split for an app of this size (where each async chunk is only a few kilobytes), nor is it optimal to extract an extra CSS file (which is only 1kb) -- they are used simply because this is a demo app showcasing all the supported features. In real apps, you should always measure and optimize based on your actual app constraints.
+## why is this happening?
+Because we are using modules to assemble our store and each module is in a separate .js file.
+This .js only exports the store object and each subsequent refresh/load does not reloads the object.
 
-- Server Side Rendering
-  - Vue + vue-router + vuex working together
-  - Server-side data pre-fetching
-  - Client-side state & DOM hydration
-  - Automatically inlines CSS used by rendered components only
-  - Preload / prefetch resource hints
-  - Route-level code splitting
-- Progressive Web App
-  - App manifest
-  - Service worker
-  - 100/100 Lighthouse score
-- Single-file Vue Components
-  - Hot-reload in development
-  - CSS extraction for production
-- Animation
-  - Effects when switching route views
-  - Real-time list updates with FLIP Animation
-
-## Architecture Overview
-
-<img width="973" alt="screen shot 2016-08-11 at 6 06 57 pm" src="https://cloud.githubusercontent.com/assets/499550/17607895/786a415a-5fee-11e6-9c11-45a2cfdf085c.png">
-
-**A detailed Vue SSR guide can be found [here](https://ssr.vuejs.org).**
-
-## Build Setup
-
-**Requires Node.js 7+**
-
-``` bash
-# install dependencies
-npm install # or yarn
-
-# serve in dev mode, with hot reload at localhost:8080
-npm run dev
-
-# build for production
-npm run build
-
-# serve in production mode
-npm start
-```
-
-## License
-
-MIT
+## How to fix it
+We should instead return a function from individual modules and call those functions to assemble the store.
+something like this: https://forum.vuejs.org/t/debugging-state-pollution-with-the-new-behaviour-of-vue-2-3-ssr/11724/4
